@@ -17,8 +17,6 @@ class PlaceInput extends Component {
       return;
     }
 
-    this.setState({ placeName: '' });
-
     this.props.onPlaceAdded(this.state.placeName);
   };
 
