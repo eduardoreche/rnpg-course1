@@ -17,8 +17,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         places: state.places.concat({
           key: Math.random().toString(),
-          name: action.name,
-          image: placeImage
+          name: action.payload,
+          image: {
+            uri:
+              'https://cache-graphicslib.viator.com/graphicslib/thumbs674x446/2630/SITours/cruzeiro-de-ponte-a-ponte-de-san-francisco-in-san-francisco-131321.jpg'
+          }
         })
       };
     case DELETE_PLACE:
@@ -32,7 +35,7 @@ const reducer = (state = initialState, action) => {
     case SELECT_PLACE:
       return {
         ...state,
-        selectedPlace: state.places.find(place => place.key === action.key)
+        selectedPlace: state.places.find(place => place.key === action.payload)
       };
     case DESELECT_PLACE:
       return {

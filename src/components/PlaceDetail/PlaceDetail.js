@@ -5,11 +5,11 @@ const placeDetail = ({ selectedPlace, onItemDeleted, onModalClosed }) => {
   let modalContent = null;
 
   if (selectedPlace) {
-    const { value, image } = selectedPlace;
+    const { name, image } = selectedPlace;
     modalContent = (
       <View>
         <Image source={image} style={styles.placeImage} />
-        <Text style={styles.placeName}>{value}</Text>
+        <Text style={styles.placeName}>{name}</Text>
       </View>
     );
   }
