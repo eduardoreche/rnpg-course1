@@ -3,15 +3,15 @@ import { FlatList, StyleSheet } from 'react-native';
 
 import ListItem from '../ListItem/ListItem';
 
-const placeList = props => (
+const placeList = ({ places, onItemSelected }) => (
   <FlatList
     style={styles.listContainer}
-    data={props.places}
+    data={places}
     renderItem={info => (
       <ListItem
         placeName={info.item.name}
         placeImage={info.item.image}
-        onItemPressed={() => props.onItemSelected(info.item.key)}
+        onItemPressed={() => onItemSelected(info.item.key)}
       />
     )}
   />
