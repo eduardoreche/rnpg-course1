@@ -1,13 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  ScrollView,
-  Image
-} from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image } from 'react-native';
 import { connect } from 'react-redux';
 
 import { addPlace } from '../../store/actions/index';
@@ -32,6 +24,10 @@ class SharePlaceScreen extends Component {
         validationRules: {
           notEmpty: true
         }
+      },
+      location: {
+        value: null,
+        valid: false
       }
     }
   };
@@ -52,9 +48,22 @@ class SharePlaceScreen extends Component {
     }
   };
 
+  locationPickedHandler = location => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          location: {
+            value: location,
+            valid: true
+          }
+        }
+      };
+    });
+  };
+
   placeAddedHandler = () => {
-    const { value } = this.state.controls.placeName;
-    if (value.trim() !== '') this.props.onAddPlace(value);
+    this.props.onAddPlace(this.state.controls.placeName.value, this.state.controls.location.value);
   };
 
   placeNameChangedHandler = val => {
@@ -82,17 +91,14 @@ class SharePlaceScreen extends Component {
           </MainText>
 
           <PickImage />
-          <PickLocation />
-          <PlaceInput
-            placeData={this.state.controls.placeName}
-            onChangeText={this.placeNameChangedHandler}
-          />
+          <PickLocation onLocationPick={this.locationPickedHandler} />
+          <PlaceInput placeData={this.state.controls.placeName} onChangeText={this.placeNameChangedHandler} />
 
           <View style={styles.button}>
             <Button
               title="Share the place!"
               onPress={this.placeAddedHandler}
-              disabled={!this.state.controls.placeName.valid}
+              disabled={!this.state.controls.placeName.valid || !this.state.controls.location.valid}
             />
           </View>
         </View>
@@ -124,7 +130,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: placeName => dispatch(addPlace(placeName))
+    onAddPlace: (placeName, location) => dispatch(addPlace(placeName, location))
   };
 };
 
