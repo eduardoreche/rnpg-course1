@@ -28,6 +28,10 @@ class SharePlaceScreen extends Component {
       location: {
         value: null,
         valid: false
+      },
+      image: {
+        value: null,
+        valid: false
       }
     }
   };
@@ -63,7 +67,11 @@ class SharePlaceScreen extends Component {
   };
 
   placeAddedHandler = () => {
-    this.props.onAddPlace(this.state.controls.placeName.value, this.state.controls.location.value);
+    this.props.onAddPlace(
+      this.state.controls.placeName.value,
+      this.state.controls.location.value,
+      this.state.controls.image.value
+    );
   };
 
   placeNameChangedHandler = val => {
@@ -82,6 +90,20 @@ class SharePlaceScreen extends Component {
     });
   };
 
+  imagePickedHandler = image => {
+    this.setState(prevState => {
+      return {
+        controls: {
+          ...prevState.controls,
+          image: {
+            value: image,
+            valid: true
+          }
+        }
+      };
+    });
+  };
+
   render() {
     return (
       <ScrollView>
@@ -90,7 +112,7 @@ class SharePlaceScreen extends Component {
             <HeadingText>Share a place with us!</HeadingText>
           </MainText>
 
-          <PickImage />
+          <PickImage onImagePicked={this.imagePickedHandler} />
           <PickLocation onLocationPick={this.locationPickedHandler} />
           <PlaceInput placeData={this.state.controls.placeName} onChangeText={this.placeNameChangedHandler} />
 
@@ -98,7 +120,11 @@ class SharePlaceScreen extends Component {
             <Button
               title="Share the place!"
               onPress={this.placeAddedHandler}
-              disabled={!this.state.controls.placeName.valid || !this.state.controls.location.valid}
+              disabled={
+                !this.state.controls.placeName.valid ||
+                !this.state.controls.location.valid ||
+                !this.state.controls.image.valid
+              }
             />
           </View>
         </View>
@@ -130,7 +156,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAddPlace: (placeName, location) => dispatch(addPlace(placeName, location))
+    onAddPlace: (placeName, location, image) => dispatch(addPlace(placeName, location, image))
   };
 };
 
