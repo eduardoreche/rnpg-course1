@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Animated
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { connect } from 'react-redux';
 
 import PlaceList from '../../components/PlaceList/PlaceList';
+
+import { getPlaces } from '../../store/actions';
 
 class FindPlaceScreen extends Component {
   static navigatorStyle = {
@@ -25,6 +21,10 @@ class FindPlaceScreen extends Component {
     super(props);
 
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent);
+  }
+
+  componentDidMount() {
+    this.props.onLoadPlaces();
   }
 
   onNavigatorEvent = event => {
@@ -100,19 +100,12 @@ class FindPlaceScreen extends Component {
             opacity: this.state.placesAnim
           }}
         >
-          <PlaceList
-            places={this.props.places}
-            onItemSelected={this.itemSelectedHandler}
-          />
+          <PlaceList places={this.props.places} onItemSelected={this.itemSelectedHandler} />
         </Animated.View>
       );
     }
 
-    return (
-      <View style={this.state.placesLoaded ? null : styles.buttonContainer}>
-        {content}
-      </View>
-    );
+    return <View style={this.state.placesLoaded ? null : styles.buttonContainer}>{content}</View>;
   }
 }
 
@@ -141,7 +134,13 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    onLoadPlaces: () => dispatch(getPlaces())
+  };
+};
+
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(FindPlaceScreen);
