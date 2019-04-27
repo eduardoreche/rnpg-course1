@@ -8,9 +8,6 @@ export const addPlace = (name, location, image) => dispatch => {
     method: 'POST',
     body: JSON.stringify({ image: image.base64 })
   })
-    .catch(err => {
-      dispatch(uiStopLoading());
-    })
     .then(res => res.json())
     .then(parsedRes => {
       const placeData = {
@@ -23,15 +20,20 @@ export const addPlace = (name, location, image) => dispatch => {
         method: 'POST',
         body: JSON.stringify(placeData)
       })
-        .catch(err => {
-          console.log(err);
-          dispatch(uiStopLoading());
-        })
         .then(res => res.json())
         .then(parsedRes => {
           console.log(parsedRes);
           dispatch(uiStopLoading());
+        })
+        .catch(err => {
+          console.log(err);
+          alert('Something went wrong, please try again!');
+          dispatch(uiStopLoading());
         });
+    })
+    .catch(err => {
+      alert('Something went wrong, please try again!');
+      dispatch(uiStopLoading());
     });
 };
 
