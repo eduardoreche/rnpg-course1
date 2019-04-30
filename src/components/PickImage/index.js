@@ -12,7 +12,9 @@ class PickImage extends Component {
   pickImageHandler = () => {
     ImagePicker.showImagePicker(
       {
-        title: 'Pick an Image'
+        title: 'Pick an Image',
+        maxWidth: 800,
+        maxHeight: 600
       },
       res => {
         if (res.didCancel) {
