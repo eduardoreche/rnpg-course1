@@ -22,7 +22,10 @@ export const addPlace = (name, location, image) => dispatch => {
           Authorization: `Bearer ${token}`
         }
       })
-        .then(res => res.json())
+        .then(res => {
+          if (res.ok) return res.json();
+          else throw new Error();
+        })
         .then(parsedRes => {
           fetch(`https://awesome-places-b54de.firebaseio.com/places.json?auth=${authToken}`, {
             method: 'POST',
@@ -32,7 +35,10 @@ export const addPlace = (name, location, image) => dispatch => {
               image: parsedRes.imageUrl
             })
           })
-            .then(res => res.json())
+            .then(res => {
+              if (res.ok) return res.json();
+              else throw new Error();
+            })
             .then(parsedRes => {
               console.log(parsedRes);
               dispatch(uiStopLoading());
@@ -67,7 +73,10 @@ export const getPlaces = () => {
     dispatch(authGetToken())
       .then(token => {
         fetch(`https://awesome-places-b54de.firebaseio.com/places.json?auth=${token}`)
-          .then(res => res.json())
+          .then(res => {
+            if (res.ok) return res.json();
+            else throw new Error();
+          })
           .then(parsedRes => {
             const places = [];
             for (let key in parsedRes) {
@@ -106,8 +115,10 @@ export const deletePlace = key => dispatch => {
       return fetch(`https://awesome-places-b54de.firebaseio.com/places/${key}.json?auth=${token}`, {
         method: 'DELETE'
       })
-        .then(res => res.json())
-        .then(parsedRes => {})
+        .then(res => {
+          if (res.ok) return res.json();
+          else throw new Error();
+        })
         .catch(err => {
           alert('Something went wrong, please try again!');
           console.log(err);
@@ -122,8 +133,4 @@ export const removePlace = key => {
     type: REMOVE_PLACE,
     key
   };
-};
-
-const savePlace = (authToken, name, location, image) => dispatch => {
-  return;
 };
