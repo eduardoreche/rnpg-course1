@@ -58,3 +58,4 @@ buck-out/
 *.env
 
 functions/awesome-places.json
+config.js
