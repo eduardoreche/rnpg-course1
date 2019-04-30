@@ -17,6 +17,7 @@ admin.initializeApp({
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
+
 exports.storeImage = functions.https.onRequest((request, response) => {
   return cors(request, response, () => {
     if (!request.headers.authorization || !request.headers.authorization.startsWith('Bearer ')) {
@@ -57,7 +58,8 @@ exports.storeImage = functions.https.onRequest((request, response) => {
               return response.status(201).json({
                 imageUrl: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(
                   file.name
-                )}?alt=media&token=${uuid}`
+                )}?alt=media&token=${uuid}`,
+                imagePath: `/places/${uuid}.jpg`
               });
             } else {
               console.log(error);
@@ -71,4 +73,12 @@ exports.storeImage = functions.https.onRequest((request, response) => {
         response.status(403).json({ error: 'Unauthorized!' });
       });
   });
+});
+
+exports.deleteImage = functions.database.ref('/places/{placeId}').onDelete(snapshot => {
+  const placeData = snapshot.val();
+  const imagePath = placeData.imagePath;
+
+  const bucket = gcs.bucket('awesome-places-b54de.appspot.com');
+  return bucket.file(imagePath).delete();
 });

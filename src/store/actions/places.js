@@ -32,7 +32,8 @@ export const addPlace = (name, location, image) => dispatch => {
             body: JSON.stringify({
               name,
               location,
-              image: parsedRes.imageUrl
+              image: parsedRes.imageUrl,
+              imagePath: parsedRes.imagePath
             })
           })
             .then(res => {
